@@ -5,9 +5,9 @@ using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.DevTools.V85.Network;
 using OpenQA.Selenium.Support.UI;
-using SpeckflowOnliner.Drivers;
+using Onliner.Drivers;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class HomePage : BasePage
     {
@@ -17,6 +17,7 @@ namespace SpeckflowOnliner.Pages
         {
             WebDriver = driver;
         }
+
         private IWebElement ProfileIcon => WebDriver.FindElement(By.XPath("//div[contains(@class,'avatar')]"));
         private IWebElement UserId => WebDriver.FindElement(By.XPath("//div[contains(@class,'profile__name')]/a"));
         private IWebElement LoginBtn => WebDriver.FindElement(By.XPath("//div[@id='userbar']//div[contains(@class, 'auth-bar__item--text')]"));

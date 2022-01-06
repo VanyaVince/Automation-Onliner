@@ -7,37 +7,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class CartPage : BasePage
     {
-        private ReadOnlyCollection<IWebElement> ProductTitels => WebDriver.FindElements(By.XPath("//div[contains(@class,'image')]/following-sibling::div//a[not(contains(@class,'button'))]"));
-
-        private IWebElement _productContainer;
+        //private ReadOnlyCollection<IWebElement> ProductTitels => WebDriver.FindElements(By.XPath("//div[contains(@class,'image')]/following-sibling::div//a[not(contains(@class,'button'))]"));
 
         public CartPage(IWebDriver driver)
         {
             WebDriver = driver;
         }
 
-        private void ProductContainer(string value)
+        private IWebElement FindProductContainer(string value)
         {
-            _productContainer = WebDriver.FindElement(By.XPath($"//a[contains(text(), '{value}')]//ancestor::div[contains(@class,'unit')]"));
+            return WebDriver.FindElement(By.XPath($"//img[@src='{value}']//ancestor::div[contains(@class,'unit')]"));
         }
 
-        public void DeleteProduct(string value)
+        public void DeleteProduct(string title)
         {
-            string deleteBtnLocator = "//a[contains(@class,'remove')]";
-            ProductContainer(value);
-            IWebElement product = _productContainer.FindElement(By.XPath(deleteBtnLocator));
+            string deleteBtn = "//a[contains(@class,'remove')]";
+            IWebElement removeBtn = FindProductContainer(title).FindElement(By.XPath(deleteBtn));
             Actions actions = new Actions(WebDriver);
-            actions.MoveToElement(product).Click().Perform();
-            product.Click();
+            actions.MoveToElement(removeBtn).Perform();
+            removeBtn.Click();
         }
 
-        public bool IsProductContainerDisplayed(string value)
+        public bool IsProductRemoved(string value)
         {
-            return _productContainer.Displayed;
+            string name = "//div[contains(@class,'offers-part_vertical_middle')]";
+            return FindProductContainer(value).FindElement(By.XPath(name)).Displayed;
         }
     }
 }

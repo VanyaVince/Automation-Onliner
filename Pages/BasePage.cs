@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using OpenQA.Selenium;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class BasePage
     {
@@ -15,7 +15,7 @@ namespace SpeckflowOnliner.Pages
             WebDriver.SwitchTo().Frame(iframe);
         }
 
-        protected IWebElement FindCertainElementByText(ReadOnlyCollection<IWebElement> list, String value)
+        protected IWebElement FindCertainElementFromGrid(ReadOnlyCollection<IWebElement> list, String value)
         {
             foreach (var element in list)
             {

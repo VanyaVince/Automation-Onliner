@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using OpenQA.Selenium;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class LoginPage : BasePage
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class PreviewCartPage : BasePage
     {

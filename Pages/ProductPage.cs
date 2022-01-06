@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     internal class ProductPage: BasePage
     {
@@ -16,7 +16,7 @@ namespace SpeckflowOnliner.Pages
 
         private IWebElement ProductBookmark => WebDriver.FindElement(By.XPath("//li[@id='product-bookmark-control']//span[@class='i-checkbox__faux']"));
         private IWebElement PersonalBookmarks => WebDriver.FindElement(By.XPath("//a[contains(@class,'favorites')]"));
-        private IWebElement ProductTitle => WebDriver.FindElement(By.XPath("//div[@class='catalog-masthead']//h1"));
+        private IWebElement ProductImage => WebDriver.FindElement(By.XPath("//img[@id='device-header-image']"));
         private IWebElement AddProductBtnToCart => WebDriver.FindElement(By.XPath("//div[@class='product-aside__box']/a[not(contains(@href,'?'))]"));
 
         public void AddProductToFavoriteList()
@@ -29,9 +29,9 @@ namespace SpeckflowOnliner.Pages
             PersonalBookmarks.Click(); 
         }
 
-        public String GetProductTitle()
+        public string GetProductId()
         {
-            return ProductTitle.Text;
+            return ProductImage.GetAttribute("src").Remove(0, 6);
         }
 
         public void AddProductCart()

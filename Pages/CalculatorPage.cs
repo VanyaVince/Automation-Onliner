@@ -4,7 +4,7 @@ using System.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace SpeckflowOnliner.Pages
+namespace Onliner.Pages
 {
     class CalculatorPage : BasePage
     {
