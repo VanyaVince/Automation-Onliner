@@ -14,20 +14,20 @@ namespace Onliner.Pages
         //private ReadOnlyCollection<IWebElement> ProductTitels => WebDriver.FindElements(By.XPath("//div[contains(@class,'image')]/following-sibling::div//a[not(contains(@class,'button'))]"));
 
         public CartPage(IWebDriver driver)
+            : base(driver)
         {
-            WebDriver = driver;
         }
 
         private IWebElement FindProductContainer(string value)
         {
-            return WebDriver.FindElement(By.XPath($"//img[@src='{value}']//ancestor::div[contains(@class,'unit')]"));
+            return webDriver.FindElement(By.XPath($"//img[@src='{value}']//ancestor::div[contains(@class,'unit')]"));
         }
 
         public void DeleteProduct(string title)
         {
             string deleteBtn = "//a[contains(@class,'remove')]";
             IWebElement removeBtn = FindProductContainer(title).FindElement(By.XPath(deleteBtn));
-            Actions actions = new Actions(WebDriver);
+            Actions actions = new Actions(webDriver);
             actions.MoveToElement(removeBtn).Perform();
             removeBtn.Click();
         }

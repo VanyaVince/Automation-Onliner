@@ -7,31 +7,34 @@ namespace Onliner.Pages
 {
     class LoginPage : BasePage
     {
-        private const string NicknameValue = "vanyavince@gmail.com";
-        private const string PasswordValue = "Tarakan!0508";
         public LoginPage(IWebDriver driver)
+            : base(driver)
         {
-            WebDriver = driver;
         }
 
-        //private IWebElement a = WebDriver.FindElement(By.XPath(""))
-        private IWebElement NicknameField => WebDriver.FindElement(By.XPath("//div[@class='auth-form__field']//input[contains(@placeholder, 'e-mail')]"));
-        private IWebElement PasswordField => WebDriver.FindElement(By.XPath("//div[contains(@class, 'helper_visible')]//preceding-sibling::input"));
-        private IWebElement SubmitBtn => WebDriver.FindElement(By.XPath("//div[@class='auth-form__body']//button[@type='submit']"));
+        private IWebElement NicknameField => webDriver.FindElement(By.XPath("//div[@class='auth-form__field']//input[contains(@placeholder, 'e-mail')]"));
+        private IWebElement PasswordField => webDriver.FindElement(By.XPath("//div[contains(@class, 'helper_visible')]//preceding-sibling::input"));
+        private IWebElement SubmitBtn => webDriver.FindElement(By.XPath("//div[@class='auth-form__body']//button[@type='submit']"));
+        private IWebElement LoginErrorLabel => webDriver.FindElement(By.XPath("//div[contains(@class,'error')]"));
 
-        public void EnterNickname()
+        public void EnterNickname(string value)
         {
-            NicknameField.SendKeys(NicknameValue);
+            NicknameField.SendKeys(value);
         }
 
-        public void EnterPassword()
+        public void EnterPassword(string value)
         {
-            PasswordField.SendKeys(PasswordValue);
+            PasswordField.SendKeys(value);
         }
 
         public void ClickOnSubmitBtn()
         {
             SubmitBtn.Click();
+        }
+
+        public bool IsLoginErrorDisplayed()
+        {
+            return LoginErrorLabel.Displayed;
         }
     }
 }

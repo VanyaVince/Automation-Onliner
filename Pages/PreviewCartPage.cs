@@ -10,11 +10,11 @@ namespace Onliner.Pages
     class PreviewCartPage : BasePage
     {
         public PreviewCartPage(IWebDriver driver)
+            : base(driver)
         {
-            WebDriver = driver;
         }
 
-        private IWebElement ProceedToCartBtn => WebDriver.FindElement(By.XPath("//div[contains(@class,'control_checkout')]/a[contains(@href,'cart')]"));
+        private IWebElement ProceedToCartBtn => webDriver.FindElement(By.XPath("//div[contains(@class,'control_checkout')]/a[contains(@href,'cart')]"));
 
         public void ProceedToCart()
         {

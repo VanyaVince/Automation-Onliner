@@ -6,13 +6,13 @@ namespace Onliner.Pages
     class BookmarkPage : BasePage
     {
         public BookmarkPage (IWebDriver driver)
+            : base(driver)
         {
-                WebDriver = driver;
         }
 
-        private IWebElement ProductsGrid => WebDriver.FindElement(By.XPath("//td[@class='pimage']"));
-        private IWebElement SelectAllBtn => WebDriver.FindElement(By.XPath("//input[@id='selectAllBookmarks']"));
-        private IWebElement RemoveBtn => WebDriver.FindElement(By.XPath("//i[@class='b-ico']/ancestor::a"));
+        private IWebElement ProductsGrid => webDriver.FindElement(By.XPath("//td[@class='pimage']"));
+        private IWebElement SelectAllBtn => webDriver.FindElement(By.XPath("//input[@id='selectAllBookmarks']"));
+        private IWebElement RemoveBtn => webDriver.FindElement(By.XPath("//i[@class='b-ico']/ancestor::a"));
 
         public void RemoveAllProduct()
         {

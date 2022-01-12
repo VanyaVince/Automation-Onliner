@@ -1,24 +1,24 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Onliner.Pages
 {
     internal class ProductPage: BasePage
     {
         public ProductPage(IWebDriver driver)
+            : base(driver)
         {
-            WebDriver = driver;
         }
 
-        private IWebElement ProductBookmark => WebDriver.FindElement(By.XPath("//li[@id='product-bookmark-control']//span[@class='i-checkbox__faux']"));
-        private IWebElement PersonalBookmarks => WebDriver.FindElement(By.XPath("//a[contains(@class,'favorites')]"));
-        private IWebElement ProductImage => WebDriver.FindElement(By.XPath("//img[@id='device-header-image']"));
-        private IWebElement AddProductBtnToCart => WebDriver.FindElement(By.XPath("//div[@class='product-aside__box']/a[not(contains(@href,'?'))]"));
-
+        private IWebElement ProductBookmark => webDriver.FindElement(By.XPath("//li[@id='product-bookmark-control']//span[@class='i-checkbox__faux']"));
+        private IWebElement PersonalBookmarks => webDriver.FindElement(By.XPath("//a[contains(@class,'favorites')]"));
+        private IWebElement ProductImage => webDriver.FindElement(By.XPath("//img[@id='device-header-image']"));
+        private IWebElement AddProductBtnToCart => webDriver.FindElement(By.XPath("//div[@class='product-aside__box']/a[not(contains(@href,'?'))]"));
+        
+        public void SelectFilter(string value)
+        {
+        }
+        
         public void AddProductToFavoriteList()
         {
             ProductBookmark.Click();

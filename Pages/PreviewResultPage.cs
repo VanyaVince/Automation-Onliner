@@ -8,12 +8,12 @@ namespace Onliner.Pages
     {
 
         public PreviewResultPage (IWebDriver driver)
+            : base(driver)
         {
-            WebDriver = driver;
         }
 
-        private ReadOnlyCollection<IWebElement> SearchResult => WebDriver.FindElements(By.XPath("//li[@class='search__result']//a[@class='category__title']"));
-        private IWebElement ModalIframe => WebDriver.FindElement(By.XPath("//iframe[@class='modal-iframe']"));
+        private ReadOnlyCollection<IWebElement> SearchResult => webDriver.FindElements(By.XPath("//li[@class='search__result']//a[@class='category__title']"));
+        private IWebElement ModalIframe => webDriver.FindElement(By.XPath("//iframe[@class='modal-iframe']"));
 
         public void SelectProduct(string value)
         {

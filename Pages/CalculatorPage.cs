@@ -13,19 +13,19 @@ namespace Onliner.Pages
         public const int DefaultWaitInSeconds = 5;
 
         public CalculatorPage(IWebDriver webDriver)
+            : base(webDriver) 
         {
-            WebDriver = webDriver;
-        }
+        }   
 
-        private IWebElement FirstNumberElement => WebDriver.FindElement(By.Id("first-number"));
-        private IWebElement SecondNumberElement => WebDriver.FindElement(By.Id("second-number"));
-        private IWebElement AddButtonElement => WebDriver.FindElement(By.Id("add-button"));
-        private IWebElement ResultElement => WebDriver.FindElement(By.Id("result"));
-        private IWebElement ResetButtonElement => WebDriver.FindElement(By.Id("reset-button"));
+        private IWebElement FirstNumberElement => webDriver.FindElement(By.Id("first-number"));
+        private IWebElement SecondNumberElement => webDriver.FindElement(By.Id("second-number"));
+        private IWebElement AddButtonElement => webDriver.FindElement(By.Id("add-button"));
+        private IWebElement ResultElement => webDriver.FindElement(By.Id("result"));
+        private IWebElement ResetButtonElement => webDriver.FindElement(By.Id("reset-button"));
 
         public void Open()
         {
-            WebDriver.Navigate().GoToUrl(CalculatorUrl);
+            webDriver.Navigate().GoToUrl(CalculatorUrl);
         }
         public void EnterFirstNumber(string number)
         {
@@ -46,9 +46,9 @@ namespace Onliner.Pages
 
         public void EnsureCalculatorIsOpenAndReset()
         {
-            if (WebDriver.Url != CalculatorUrl)
+            if (webDriver.Url != CalculatorUrl)
             {
-                WebDriver.Url = CalculatorUrl;
+                webDriver.Url = CalculatorUrl;
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Onliner.Pages
         /// <returns>An accepted result returned from the UI. If the UI does not return an accepted result within the timeout an exception is thrown.</returns>
         private T WaitUntil<T>(Func<T> getResult, Func<T, bool> isResultAccepted) where T : class
         {
-            var wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(DefaultWaitInSeconds));
+            var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(DefaultWaitInSeconds));
             return wait.Until(driver =>
             {
                 var result = getResult();

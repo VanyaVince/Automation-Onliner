@@ -4,17 +4,13 @@ using Onliner.Pages;
 
 namespace Onliner.Tests
 {
-    public class Authentication
+    public class Authentication : BaseTest
     {
-        private int expectedId = 3397717;
+        private readonly int expectedId = 3397717;        
 
         private HomePage homePage;
         private LoginPage loginPage;
         private Driver driver;
-
-        public Authentication()
-        {
-        }
 
         [SetUp]
         public void Setup()
@@ -30,14 +26,12 @@ namespace Onliner.Tests
 
             homePage.OpenUrl();
             homePage.ClickOnLoginBtn();
-            loginPage.EnterNickname();
-            loginPage.EnterPassword();
+            loginPage.EnterNickname(NicknameValue);
+            loginPage.EnterPassword(PasswordValue);
             loginPage.ClickOnSubmitBtn();
             homePage.ClickOnProfileItem();
 
-            var actualId = homePage.GetUserId();
-
-            Assert.AreEqual(expectedId, actualId);
+            Assert.AreEqual(expectedId, homePage.GetUserId());
         }
 
         [Test]
@@ -45,18 +39,31 @@ namespace Onliner.Tests
         {
             homePage.OpenUrl();
             homePage.ClickOnLoginBtn();
-            loginPage.EnterNickname();
-            loginPage.EnterPassword();
+            loginPage.EnterNickname(NicknameValue);
+            loginPage.EnterPassword(PasswordValue);
             loginPage.ClickOnSubmitBtn();
             homePage.ClickOnProfileItem();
             homePage.ClickOnLogoutBtn();
+
             Assert.IsTrue(homePage.IsLoginBtnDisplayed());
+        }
+
+        [Test]
+        public void LoginWithInvalidCredentials()
+        {
+            homePage.OpenUrl();
+            homePage.ClickOnLoginBtn();
+            loginPage.EnterNickname($"{NicknameValue}Bar");
+            loginPage.EnterPassword(PasswordValue);
+            loginPage.ClickOnSubmitBtn();
+
+            Assert.IsTrue(loginPage.IsLoginErrorDisplayed());
         }
 
         [TearDown]
         public void TearDown()
         {
-            driver.CurrentDriver.Close();
+            driver.CurrentDriver.Quit();
         }
     }
 }

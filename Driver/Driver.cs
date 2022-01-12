@@ -16,10 +16,13 @@ namespace Onliner.Drivers
 
         public IWebDriver CurrentDriver => _currentWebDriver;
 
-
         private IWebDriver GetDriver()
         {
-            IWebDriver driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--disable-popup-blocking");
+            options.AddArgument("--host-resolver-rules=MAP www.google-analytics.com 127.0.0.1");
+
+            IWebDriver driver = new ChromeDriver(options);
 
             driver.Manage().Window.Maximize();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -29,7 +32,7 @@ namespace Onliner.Drivers
 
         public static WebDriverWait CreateWebDriverWait(IWebDriver driver)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(90));
             wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
             return wait;
         }
