@@ -32,7 +32,7 @@ namespace Onliner.Drivers
 
         public static WebDriverWait CreateWebDriverWait(IWebDriver driver)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(50));
             wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
             return wait;
         }

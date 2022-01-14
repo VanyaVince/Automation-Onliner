@@ -7,6 +7,7 @@ using OpenQA.Selenium.Support;
 using Onliner.Drivers;
 using OpenQA.Selenium;
 using NUnit.Framework;
+using Onliner.Utils;
 
 namespace Onliner.Pages
 {
@@ -21,99 +22,66 @@ namespace Onliner.Pages
         private IWebElement NextProductPage => Driver.CreateWebDriverWait(webDriver).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//div[@id='schema-pagination']/a")));
         private IWebElement PaginationDropdownBtn => webDriver.FindElement(By.XPath("//div[@class='schema-pagination__dropdown']"));
 
-        public List<string> GetProductTitels(List<string> list)
+        public void GetProductTitels(List<string> productTitleList)
         {
-            ProductsTitels.ToList().ForEach(x => list.Add(x.Text));
-            return list;
+            Driver.CreateWebDriverWait(webDriver).Until(waiting =>
+            {
+                ProductsTitels.ToList().ForEach(el => productTitleList.Add(el.Text));
+                return true;
+            });
+
         }
         
         public int GetCurrentPageIndex()
         {
-            return Int32.Parse(PaginationDropdownBtn.FindElement(By.XPath(".//div[contains(@class,'value')]")).Text);
+            var pageIndex = PaginationDropdownBtn.FindElement(By.XPath(".//div[contains(@class,'value')]")).Text;
+            return Int32.Parse(pageIndex);
         }
 
-        public IWebElement ClickOnNextPaginationPage()
+        public void ClickOnPaginationPage(int pageNumber)
         {
-            var currentPage = GetCurrentPageIndex();
-
-            Console.WriteLine($"current page number {currentPage}");
-
-            var nextPaginationPage = webDriver.FindElement(By.XPath($"//div[@id='mCSB_1_container']//a[text()='{currentPage + 1}']"));
-
-            return nextPaginationPage;
+            webDriver.FindElement(By.XPath($"//div[@id='mCSB_1_container']//a[text()='{pageNumber}']")).Click();
         }
 
         public void ProceedToNextProductPage()
-        {
-            List<string> list = new List<string>();
-
-            while (IsLastPage())
-            {
-                GetProductTitels(list);
-                actions.MoveToElement(NextProductPage).Perform();
-
-                PaginationDropdownBtn.Click();
-                ClickOnNextPaginationPage().Click();
+        {         
+            actions.MoveToElement(NextProductPage).Perform();
+            PaginationDropdownBtn.Click();
+            var pageNumber = GetCurrentPageIndex() + 1;
+            ClickOnPaginationPage(pageNumber);
 
                 Driver.CreateWebDriverWait(webDriver).Until(waiting =>
                 {
                     var el = webDriver.FindElement(By.XPath($"//div[@id='mCSB_1_container']//a[text()='{GetCurrentPageIndex()}']")).GetCssValue("background-color");
-                    return ConvertRGBToHex(el) == "#555555";
+                    return ServiceHelper.ConvertRGBToHex(el) == "#555555";
                 });
 
                 Driver.CreateWebDriverWait(webDriver).Until(waiting =>
                 {
                     return ProductsTitels.Count > 0;
                 });
-            }
-
-            GetProductTitels(list);
-
-            Console.WriteLine("filter name " + GetSelectedFilter());
-            Assert.IsTrue(list.All(x => x.Contains(GetSelectedFilter())));
-            Console.WriteLine($"number of products within list {list.Count}");
-        }
-
-
-        public string ConvertRGBToHex(string rjb)
-        {
-            string[] numbers = rjb.Replace("rgba(", "").Replace(")", "").Split(",");
-
-            int r = Int32.Parse(numbers[0].Trim());
-            int g = Int32.Parse(numbers[1].Trim());
-            int b = Int32.Parse(numbers[2].Trim());
-
-            return string.Format("#{0:X1}{1:X1}{2:X1}", r, g, b);
         }
 
         public bool IsLastPage()
         {
-            bool result = NextProductPage.GetAttribute("class").Contains("disabled");
-            Console.WriteLine($"GetAttribute of disabled equals to  {result}");
-            return !result;
+            bool result = NextProductPage.GetAttribute("class").Contains("disabled");      
+            return result;
         }
 
-        public IWebElement FindFilterSection(string value)
+
+        public ReadOnlyCollection<IWebElement> FindAllFiltersFromSection(string filterName)
         {
-            return webDriver.FindElement(By.XPath($"//span[text()='{value}']/ancestor-or-self::div[contains(@class,'field')]"));
+            var filters = webDriver.FindElements(By.XPath($"//span[text()='{filterName}']/ancestor-or-self::div[contains(@class,'field')]//li//span[@class='i-checkbox']")); 
+            return filters;
         }
 
-        public ReadOnlyCollection<IWebElement> GetManufacturerFilterGrid(string value)
+        public void SelectFilterByIndexFromSection(string filterName, int filterIndex)
         {
-            return FindFilterSection($"{value}").FindElements(By.XPath(".//li//span[@class='i-checkbox']"));
+            var filter = FindAllFiltersFromSection(filterName)[filterIndex];
+
+            js.ExecuteScript("arguments[0].scrollIntoView(true)", filter);
+            filter.Click();
         }
-
-        public void SelectManufactureFilter(string value)
-        {
-            var filtersItems = GetManufacturerFilterGrid(value);
-            var randomNumber = random.Next(filtersItems.Count);
-            var el = filtersItems[0];
-
-            js.ExecuteScript("arguments[0].scrollIntoView(true)", el);
-            el.Click();
-            js.ExecuteScript("window.scrollTo(0,0)");
-        }
-
 
         public string GetSelectedFilter()
         {

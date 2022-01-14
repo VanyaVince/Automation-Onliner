@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Onliner.Drivers;
 using Onliner.Pages;
+using Onliner.steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,14 @@ namespace Onliner.Tests
     public class Filter : BaseTest
     {
         private readonly string _product = "Мобильные телефоны";
+        private readonly string _producer = "Производитель";
         private string? _productId;
 
         private readonly HomePage _homePage;
         private readonly LoginPage _loginPage;
         private readonly PreviewResultPage _previewResultPage;
         private readonly ProductListeningPage _productListeningPage;
+        private readonly ProductListeningPageSteps _productListeningPageSteps;
         private readonly ProductPage _productPage;
         private readonly PreviewCartPage _previewCartPage;
         private readonly CartPage _cartPage;
@@ -31,6 +34,7 @@ namespace Onliner.Tests
             _loginPage = new LoginPage(driver.CurrentDriver);
             _previewResultPage = new PreviewResultPage(driver.CurrentDriver);
             _productListeningPage = new ProductListeningPage(driver.CurrentDriver);
+            _productListeningPageSteps = new ProductListeningPageSteps(driver.CurrentDriver);
             _productPage = new ProductPage(driver.CurrentDriver);
             _previewCartPage = new PreviewCartPage(driver.CurrentDriver);
             _cartPage = new CartPage(driver.CurrentDriver);
@@ -43,10 +47,11 @@ namespace Onliner.Tests
             _homePage.SearchProduct(_product);
             _previewResultPage.SelectProduct(_product);
 
-            
-            _productListeningPage.SelectManufactureFilter("Производитель");
-            _productListeningPage.ProceedToNextProductPage();
+            _productListeningPageSteps.SelectRandomFilterFromSection(_producer);
 
+            List<string> productTitles = _productListeningPageSteps.GetAllProductsTitlesDisplayed();
+
+            Assert.IsTrue(productTitles.All(title => title.Contains(_productListeningPageSteps.GetSelectedFilter())));
         }
 
         [TearDown]
