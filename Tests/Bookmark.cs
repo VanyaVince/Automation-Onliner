@@ -39,7 +39,7 @@ namespace Onliner.Tests
             _loginPage.ClickOnSubmitBtn();
             _homePage.SearchProduct(_product);
             _previewResultPage.SelectProduct(_product);
-            _searchResultPage.ClickOnFirstItem();
+            _searchResultPage.ClickOnFirstItemInProductGrid();
             _expectedProductId = _productPage.GetProductId();
             _productPage.AddProductToFavoriteList();
             _productPage.ProccedToPersonalBookmarks();

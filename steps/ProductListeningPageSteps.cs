@@ -1,4 +1,5 @@
 ﻿using Onliner.Pages;
+using Onliner.Utils;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,12 @@ namespace Onliner.steps
 {
     public class ProductListeningPageSteps
     {
-        private readonly IWebDriver _driver;
         private readonly ProductListeningPage _productListeningPage;
         private readonly Random _random = new Random();
+        private readonly Sorting _sortingHelper = new Sorting();
 
         public ProductListeningPageSteps(IWebDriver driver)
         {
-            _driver = driver;
             _productListeningPage = new ProductListeningPage(driver);
         }
 
@@ -28,23 +28,35 @@ namespace Onliner.steps
 
         public List<string> GetAllProductsTitlesDisplayed()
         {
-            List<string> products = new List<string>();
+            List<string> productsTitles = new List<string>();
 
             while (!_productListeningPage.IsLastPage())
             {
-                _productListeningPage.GetProductTitels(products);
+                productsTitles.AddRange(_productListeningPage.GetProductTitels());
                 _productListeningPage.ProceedToNextProductPage();
 
             }
-            _productListeningPage.GetProductTitels(products);
-
-            Console.WriteLine($"numbers of product collected {products.Count}");
-            return products;
+            productsTitles.AddRange(_productListeningPage.GetProductTitels());
+            
+            Console.WriteLine($"number of products {productsTitles.Count}");
+            return productsTitles;
         }
 
         public string GetSelectedFilter()
         {
             return _productListeningPage.GetSelectedFilter();
+        }
+
+        public void SelectSorting(string sortingName)
+        {
+            _productListeningPage.OpenSortingPanel();
+            _productListeningPage.SelectSortingType(sortingName);
+        }
+
+        public bool isSortedBy(string sortingName)
+        {
+            var prices = _productListeningPage.GetProductPrices();
+            return _sortingHelper.isSortedBy(sortingName, prices);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,12 @@ namespace Onliner.Utils
             int g = Int32.Parse(numbers[1].Trim());
             int b = Int32.Parse(numbers[2].Trim());
 
-            return string.Format("#{0:X1}{1:X1}{2:X1}", r, g, b);
+            return string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b);
+        } 
+
+        public static double ConvertPriceToDouble(string price)
+        {
+            return double.Parse(ParsingHelper.ParsePrice(price), new CultureInfo("en-US"));
         }
     }
 }

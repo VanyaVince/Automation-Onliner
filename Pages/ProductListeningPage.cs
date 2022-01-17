@@ -18,18 +18,45 @@ namespace Onliner.Pages
 
         private ReadOnlyCollection<IWebElement> ProductsGrid => webDriver.FindElements(By.XPath("//div[@class='schema-product__group']//div[contains(@class,'part_1')]//a[contains(@data-bind,'product.html')]"));
         private ReadOnlyCollection<IWebElement> ProductsTitels => webDriver.FindElements(By.XPath("//span[contains(@data-bind,'product.full_name')]"));
+        private ReadOnlyCollection<IWebElement> ProductPrices => webDriver.FindElements(By.XPath("//div[@class='schema-product__price']//span"));
+        private IWebElement SortDropdownBtn => webDriver.FindElement(By.XPath("//div[@id='schema-order']"));
         private IWebElement FilterTag => webDriver.FindElement(By.XPath("//span[@class='schema-tags__text']"));
         private IWebElement NextProductPage => Driver.CreateWebDriverWait(webDriver).Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//div[@id='schema-pagination']/a")));
         private IWebElement PaginationDropdownBtn => webDriver.FindElement(By.XPath("//div[@class='schema-pagination__dropdown']"));
-
-        public void GetProductTitels(List<string> productTitleList)
+ 
+        public void OpenSortingPanel()
         {
+            SortDropdownBtn.Click();
+        }
+
+        public void SelectSortingType(string sortingName)
+        {
+            var el = webDriver.FindElement(By.XPath($"//div[contains(@class,'schema-order__item')]//span[text()='{sortingName}']"));
+            el.Click();
+        }
+
+        public List<string> GetProductPrices()
+        {
+            List<string> prices = new List<string>();
             Driver.CreateWebDriverWait(webDriver).Until(waiting =>
             {
-                ProductsTitels.ToList().ForEach(el => productTitleList.Add(el.Text));
+                prices.Clear();
+                ProductPrices.ToList().ForEach(el => prices.Add(el.Text));
                 return true;
             });
+            return prices;
+        }
 
+        public List<string> GetProductTitels()
+        {
+            List<string> titels = new List<string>();
+            Driver.CreateWebDriverWait(webDriver).Until(waiting =>
+            {
+                titels.Clear();
+                ProductsTitels.ToList().ForEach(el => titels.Add(el.Text));
+                return true;
+            });
+            return titels;
         }
         
         public int GetCurrentPageIndex()
@@ -56,10 +83,7 @@ namespace Onliner.Pages
                     return ServiceHelper.ConvertRGBToHex(el) == "#555555";
                 });
 
-                Driver.CreateWebDriverWait(webDriver).Until(waiting =>
-                {
-                    return ProductsTitels.Count > 0;
-                });
+                Driver.CreateWebDriverWait(webDriver).Until(waiting =>{ return ProductsTitels.Count > 0; });
         }
 
         public bool IsLastPage()
@@ -67,7 +91,6 @@ namespace Onliner.Pages
             bool result = NextProductPage.GetAttribute("class").Contains("disabled");      
             return result;
         }
-
 
         public ReadOnlyCollection<IWebElement> FindAllFiltersFromSection(string filterName)
         {
@@ -88,7 +111,7 @@ namespace Onliner.Pages
             return FilterTag.Text;
         }
 
-        public void ClickOnFirstItem()
+        public void ClickOnFirstItemInProductGrid()
         {
             ProductsGrid[0].Click();
         }

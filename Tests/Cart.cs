@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
 using Onliner.Drivers;
 using Onliner.Pages;
+using Onliner.steps;
 using System;
+using System.Threading;
 
 namespace Onliner.Tests
 {
@@ -17,6 +19,7 @@ namespace Onliner.Tests
         private readonly ProductPage _productPage;
         private readonly PreviewCartPage _previewCartPage;
         private readonly CartPage _cartPage;
+        private readonly CartPageSteps _cartPageSteps;
 
         private readonly Driver driver = new Driver();
 
@@ -29,6 +32,7 @@ namespace Onliner.Tests
             _productPage = new ProductPage(driver.CurrentDriver);
             _previewCartPage = new PreviewCartPage(driver.CurrentDriver);
             _cartPage = new CartPage(driver.CurrentDriver);
+            _cartPageSteps = new CartPageSteps(driver.CurrentDriver);
         }
 
         [Test]
@@ -41,13 +45,38 @@ namespace Onliner.Tests
             _loginPage.ClickOnSubmitBtn();
             _homePage.SearchProduct(_product);
             _previewResultPage.SelectProduct(_product);
-            _searchResultPage.ClickOnFirstItem();
+            _searchResultPage.ClickOnFirstItemInProductGrid();
             _productId = _productPage.GetProductId();
             _productPage.AddProductCart();
             _previewCartPage.ProceedToCart();
             _cartPage.DeleteProduct(_productId);
 
             Assert.IsTrue(_cartPage.IsProductRemoved(_productId));
+        }
+
+        [Test]
+        public void IncreaseProductQuantity()
+        {
+            _homePage.OpenUrl();
+            _homePage.ClickOnLoginBtn();
+            _loginPage.EnterNickname(NicknameValue);
+            _loginPage.EnterPassword(PasswordValue);
+            _loginPage.ClickOnSubmitBtn();
+            _homePage.SearchProduct(_product);
+            _previewResultPage.SelectProduct(_product);
+            _searchResultPage.ClickOnFirstItemInProductGrid();
+
+            _productId = _productPage.GetProductId();
+
+            _productPage.AddProductCart();
+            _previewCartPage.ProceedToCart();
+
+            _cartPageSteps.IncreaseProductQuantity(_productId);
+
+            Assert.IsTrue(_cartPageSteps.IsProductPriceCalculatedProperly(_productId));
+
+            _cartPage.DeleteProduct(_productId);
+
         }
 
         [TearDown]

@@ -11,38 +11,34 @@ using System.Threading.Tasks;
 
 namespace Onliner.Tests
 {
-    public class Filter : BaseTest
+    class Sorting
     {
-        private readonly string _product = "Мобильные телефоны";
-        private readonly string _producer = "Производитель";
+        private readonly Driver driver = new Driver();
+        private readonly string _productName = "Планшеты";
+        private readonly string _sortingType = "Дорогие";
 
         private readonly HomePage _homePage;
         private readonly PreviewResultPage _previewResultPage;
         private readonly ProductListeningPageSteps _productListeningPageSteps;
 
-
-        private readonly Driver driver = new Driver();
-
-        public Filter()
+        public Sorting()
         {
             _homePage = new HomePage(driver.CurrentDriver);
             _previewResultPage = new PreviewResultPage(driver.CurrentDriver);
             _productListeningPageSteps = new ProductListeningPageSteps(driver.CurrentDriver);
-
         }
 
         [Test]
         public void FilterProductWithSpecificProducer()
         {
             _homePage.OpenUrl();
-            _homePage.SearchProduct(_product);
-            _previewResultPage.SelectProduct(_product);
+            _homePage.SearchProduct(_productName);
+            _previewResultPage.SelectProduct(_productName);
 
-            _productListeningPageSteps.SelectRandomFilterFromSection(_producer);
+            _productListeningPageSteps.SelectSorting(_sortingType);
 
-            List<string> productTitles = _productListeningPageSteps.GetAllProductsTitlesDisplayed();
-
-            Assert.IsTrue(productTitles.All(title => title.Contains(_productListeningPageSteps.GetSelectedFilter())));
+            Assert.IsTrue(_productListeningPageSteps.isSortedBy(_sortingType));
+            
         }
 
         [TearDown]
@@ -50,5 +46,6 @@ namespace Onliner.Tests
         {
             driver.CurrentDriver.Quit();
         }
+
     }
 }

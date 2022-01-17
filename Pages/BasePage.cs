@@ -14,7 +14,6 @@ namespace Onliner.Pages
         protected Actions actions;
         protected Random random;
 
-
         public BasePage(IWebDriver driver)
         {
             webDriver = driver;
