@@ -20,6 +20,11 @@ namespace Onliner.steps
             _productListeningPage = new ProductListeningPage(driver);
         }
 
+        public void SelectProductFromGrid(int index)
+        {
+            _productListeningPage.ClickOnProductInGrid(index);
+        }
+
         public void SelectRandomFilterFromSection(string filterName)
         {   
             var randomNumber = _random.Next(_productListeningPage.FindAllFiltersFromSection(filterName).Count);
@@ -52,6 +57,7 @@ namespace Onliner.steps
             _productListeningPage.OpenSortingPanel();
             _productListeningPage.SelectSortingType(sortingName);
         }
+
 
         public bool isSortedBy(string sortingName)
         {

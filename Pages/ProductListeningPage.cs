@@ -111,9 +111,9 @@ namespace Onliner.Pages
             return FilterTag.Text;
         }
 
-        public void ClickOnFirstItemInProductGrid()
+        public void ClickOnProductInGrid(int index)
         {
-            ProductsGrid[0].Click();
+            ProductsGrid[index].Click();
         }
     }
 }

@@ -11,41 +11,29 @@ using System.Threading.Tasks;
 
 namespace Onliner.Tests
 {
-    class Sorting
+    public class Sorting : BaseTest
     {
-        private readonly Driver driver = new Driver();
         private readonly string _productName = "Планшеты";
         private readonly string _sortingType = "Дорогие";
 
-        private readonly HomePage _homePage;
-        private readonly PreviewResultPage _previewResultPage;
-        private readonly ProductListeningPageSteps _productListeningPageSteps;
-
-        public Sorting()
+        [SetUp]
+        public void Setup()
         {
-            _homePage = new HomePage(driver.CurrentDriver);
-            _previewResultPage = new PreviewResultPage(driver.CurrentDriver);
-            _productListeningPageSteps = new ProductListeningPageSteps(driver.CurrentDriver);
+            driver = new Driver();
+            homePageSteps = new HomePageSteps(driver.CurrentDriver);
+            loginPageSteps = new LoginPageSteps(driver.CurrentDriver);
+            productListeningPageSteps = new ProductListeningPageSteps(driver.CurrentDriver);
         }
 
         [Test]
         public void FilterProductWithSpecificProducer()
         {
-            _homePage.OpenUrl();
-            _homePage.SearchProduct(_productName);
-            _previewResultPage.SelectProduct(_productName);
+            homePageSteps.OpenUrl(url);
+            homePageSteps.SearchForProduct(_productName);
+            productListeningPageSteps.SelectSorting(_sortingType);
 
-            _productListeningPageSteps.SelectSorting(_sortingType);
-
-            Assert.IsTrue(_productListeningPageSteps.isSortedBy(_sortingType));
+            Assert.IsTrue(productListeningPageSteps.isSortedBy(_sortingType));
             
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-            driver.CurrentDriver.Quit();
-        }
-
     }
 }

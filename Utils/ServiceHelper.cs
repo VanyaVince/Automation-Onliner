@@ -9,6 +9,8 @@ namespace Onliner.Utils
 {
     class ServiceHelper
     {
+        private static readonly Random _random = new Random();
+
         public static string ConvertRGBToHex(string rjb)
         {
             string[] numbers = rjb.Replace("rgba(", "").Replace(")", "").Split(",");
@@ -23,6 +25,19 @@ namespace Onliner.Utils
         public static double ConvertPriceToDouble(string price)
         {
             return double.Parse(ParsingHelper.ParsePrice(price), new CultureInfo("en-US"));
+        }
+
+        public static string GenerateRandomValue(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            var stringsChar = new char[length];
+            
+            for (int i = 0; i < length; i++)
+            {
+                stringsChar[i] = chars[_random.Next(chars.Length)];
+            }
+            return new string (stringsChar);
         }
     }
 }

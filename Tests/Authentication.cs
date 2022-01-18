@@ -1,69 +1,49 @@
 ﻿using NUnit.Framework;
 using Onliner.Drivers;
-using Onliner.Pages;
+using Onliner.steps;
+using Onliner.Utils;
 
 namespace Onliner.Tests
 {
     public class Authentication : BaseTest
     {
-        private readonly int expectedId = 3397717;        
-
-        private HomePage homePage;
-        private LoginPage loginPage;
-        private Driver driver;
+        private readonly string expectedId = "3397717";        
 
         [SetUp]
         public void Setup()
         {
             driver = new Driver();
-            homePage = new HomePage(driver.CurrentDriver);
-            loginPage = new LoginPage(driver.CurrentDriver);
+            homePageSteps = new HomePageSteps(driver.CurrentDriver);
+            loginPageSteps = new LoginPageSteps(driver.CurrentDriver);
         }
 
         [Test]
         public void LoginSuccessfullyTest()
         {
+            homePageSteps.OpenUrl(url);
+            loginPageSteps.Login(NicknameValue, PasswordValue);
+            homePageSteps.OpenProfilePopup();
 
-            homePage.OpenUrl();
-            homePage.ClickOnLoginBtn();
-            loginPage.EnterNickname(NicknameValue);
-            loginPage.EnterPassword(PasswordValue);
-            loginPage.ClickOnSubmitBtn();
-            homePage.ClickOnProfileItem();
-
-            Assert.AreEqual(expectedId, homePage.GetUserId());
+            Assert.AreEqual(expectedId, homePageSteps.GetUserId());
         }
 
         [Test]
         public void LogoutSuccessfullyTest()
         {
-            homePage.OpenUrl();
-            homePage.ClickOnLoginBtn();
-            loginPage.EnterNickname(NicknameValue);
-            loginPage.EnterPassword(PasswordValue);
-            loginPage.ClickOnSubmitBtn();
-            homePage.ClickOnProfileItem();
-            homePage.ClickOnLogoutBtn();
+            homePageSteps.OpenUrl(url);
+            loginPageSteps.Login(NicknameValue, PasswordValue);
+            homePageSteps.Logout();
 
-            Assert.IsTrue(homePage.IsLoginBtnDisplayed());
+            Assert.IsTrue(homePageSteps.IsLoginBtnDisplayed());
         }
 
         [Test]
         public void LoginWithInvalidCredentials()
         {
-            homePage.OpenUrl();
-            homePage.ClickOnLoginBtn();
-            loginPage.EnterNickname($"{NicknameValue}Bar");
-            loginPage.EnterPassword(PasswordValue);
-            loginPage.ClickOnSubmitBtn();
+            homePageSteps.OpenUrl(url);
+            loginPageSteps.Login(ServiceHelper.GenerateRandomValue(10), PasswordValue);
 
-            Assert.IsTrue(loginPage.IsLoginErrorDisplayed());
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            driver.CurrentDriver.Quit();
+            Assert.IsTrue(loginPageSteps.IsLoginErrorDisplayed());
         }
     }
 }

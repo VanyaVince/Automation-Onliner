@@ -17,7 +17,7 @@ namespace Onliner.Pages
             return webDriver.FindElement(By.XPath($"//img[@src='{productId}']//ancestor::div[contains(@class,'unit')]"));
         }
 
-        public void DeleteProduct(string id)
+        public void ClickOnDeleteProductBtn(string id)
         {
             string deleteBtnLocator = "//a[contains(@class,'remove')]";
             var removeBtn = FindProductContainer(id).FindElement(By.XPath(deleteBtnLocator));

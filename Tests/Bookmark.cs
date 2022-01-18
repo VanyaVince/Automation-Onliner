@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Onliner.Drivers;
 using Onliner.Pages;
+using Onliner.steps;
 using System;
 
 namespace Onliner.Tests
@@ -8,50 +9,42 @@ namespace Onliner.Tests
     public class Bookmark : BaseTest
     {
         private readonly string _product = "Телевизоры";
+
         private string? _expectedProductId;
 
-        private readonly Driver _drivers;
-
-        private readonly HomePage _homePage;
-        private readonly LoginPage _loginPage;
-        private readonly PreviewResultPage _previewResultPage;
-        private readonly ProductListeningPage _searchResultPage;
-        private readonly ProductPage _productPage;
-        private readonly BookmarkPage _bookmarkPage;
-
-        public Bookmark()
+        [SetUp]
+        public void SetUp()
         {
-            _drivers = new Driver();
-            _homePage = new HomePage(_drivers.CurrentDriver);
-            _loginPage = new LoginPage(_drivers.CurrentDriver);
-            _previewResultPage = new PreviewResultPage(_drivers.CurrentDriver);
-            _searchResultPage = new ProductListeningPage(_drivers.CurrentDriver);
-            _productPage = new ProductPage(_drivers.CurrentDriver);
-            _bookmarkPage = new BookmarkPage(_drivers.CurrentDriver);
+            driver = new Driver();
+            homePageSteps = new HomePageSteps(driver.CurrentDriver);
+            loginPageSteps = new LoginPageSteps(driver.CurrentDriver);
+            productListeningPageSteps = new ProductListeningPageSteps(driver.CurrentDriver);
+            productPageSteps = new ProductPageSteps(driver.CurrentDriver);
+            bookmarkPageSteps = new BookmarkPageSteps(driver.CurrentDriver);
         }
+
         [Test]
         public void MarkProductAsFavorite()
         {
-            _homePage.OpenUrl();
-            _homePage.ClickOnLoginBtn();
-            _loginPage.EnterNickname(NicknameValue);
-            _loginPage.EnterPassword(PasswordValue);
-            _loginPage.ClickOnSubmitBtn();
-            _homePage.SearchProduct(_product);
-            _previewResultPage.SelectProduct(_product);
-            _searchResultPage.ClickOnFirstItemInProductGrid();
-            _expectedProductId = _productPage.GetProductId();
-            _productPage.AddProductToFavoriteList();
-            _productPage.ProccedToPersonalBookmarks();
+            homePageSteps.OpenUrl(url);
+            loginPageSteps.Login(NicknameValue, PasswordValue);
 
-            Assert.IsTrue(_bookmarkPage.IsProductDisplayed(_expectedProductId));
+            homePageSteps.SearchForProduct(_product);
+            productListeningPageSteps.SelectProductFromGrid(0);
+
+            _expectedProductId = productPageSteps.GetProductId();
+
+            productPageSteps.AddProductToFavoriteList();
+            productPageSteps.ProccedToPersonalBookmarks();
+
+            Assert.IsTrue(bookmarkPageSteps.IsProductDisplayed(_expectedProductId));
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
-            _bookmarkPage.RemoveAllProduct();
-            _drivers.CurrentDriver.Quit();
+            bookmarkPageSteps.RemoveAllProduct();
+            driver.CurrentDriver.Quit();
         }
     }
 }

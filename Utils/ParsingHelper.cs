@@ -8,14 +8,13 @@ namespace Onliner.Utils
 {
     class ParsingHelper
     {
-
         public static string ParsePrice(string price)
         {
             var onlyDigitsLeft = price.Replace("р.", "");
             var replacedPointWithDot = onlyDigitsLeft.Replace(",", ".");
-            var croppedEmptySpaces = replacedPointWithDot.Trim();
+            var parsedStringWithTrimeSpaces = replacedPointWithDot.Trim();
 
-            return croppedEmptySpaces;
+            return parsedStringWithTrimeSpaces;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Onliner.Pages
 
         private IWebElement ProceedToCartBtn => webDriver.FindElement(By.XPath("//div[contains(@class,'control_checkout')]/a[contains(@href,'cart')]"));
 
-        public void ProceedToCart()
+        public void ClickOnProceedToCartBtn()
         {
             ProceedToCartBtn.Click();
         }

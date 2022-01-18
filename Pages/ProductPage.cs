@@ -15,26 +15,22 @@ namespace Onliner.Pages
         private IWebElement ProductImage => webDriver.FindElement(By.XPath("//img[@id='device-header-image']"));
         private IWebElement AddProductBtnToCart => webDriver.FindElement(By.XPath("//div[@class='product-aside__box']/a[not(contains(@href,'?'))]"));
         
-        public void SelectFilter(string value)
-        {
-        }
-        
-        public void AddProductToFavoriteList()
+        public void ClickOnProductBookmarkBtn()
         {
             ProductBookmark.Click();
         }
 
-        public void ProccedToPersonalBookmarks()
+        public void ClickOnPersonalBookmarks()
         {
             PersonalBookmarks.Click(); 
         }
 
-        public string GetProductId()
+        public string GetProductImageSource()
         {
             return ProductImage.GetAttribute("src").Remove(0, 6);
         }
 
-        public void AddProductCart()
+        public void ClickOnAddProductCartBtn()
         {
             AddProductBtnToCart.Click();
         }

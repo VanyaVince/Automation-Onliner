@@ -14,10 +14,14 @@ namespace Onliner.Pages
         private IWebElement SelectAllBtn => webDriver.FindElement(By.XPath("//input[@id='selectAllBookmarks']"));
         private IWebElement RemoveBtn => webDriver.FindElement(By.XPath("//i[@class='b-ico']/ancestor::a"));
 
-        public void RemoveAllProduct()
+        public void ClickOnRemoveBtn()
+        {
+            RemoveBtn.Click();
+        }
+
+        public void ClickOnSelectAllBtn()
         {
             SelectAllBtn.Click();
-            RemoveBtn.Click();
         }
 
         public bool IsProductDisplayed(string value)

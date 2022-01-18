@@ -11,8 +11,6 @@ namespace Onliner.Pages
 {
     class HomePage : BasePage
     {
-        private string url = "https://www.onliner.by/";
-
         public HomePage(IWebDriver driver)
             : base(driver)
         {
@@ -23,11 +21,13 @@ namespace Onliner.Pages
         private IWebElement LoginBtn => webDriver.FindElement(By.XPath("//div[@id='userbar']//div[contains(@class, 'auth-bar__item--text')]"));
         private IWebElement LogoutBtn => webDriver.FindElement(By.XPath("//div[contains(@class, 'logout')]/a"));
         private IWebElement SearchField => webDriver.FindElement(By.XPath("//input[@name='query']"));
+        private IWebElement ProfileSettingsBtn => webDriver.FindElement(By.XPath("//a[contains(@class,'profile__settings')]"));
 
-        public void OpenUrl()
+        public void OpenUrl(string url)
         {
             webDriver.Navigate().GoToUrl(url);
         }
+
         public void SearchProduct(String value) 
         {
             Driver.CreateWebDriverWait(webDriver).Until(waiting =>
@@ -36,6 +36,12 @@ namespace Onliner.Pages
                 return true;
             });
         }
+
+        public void ClickOnProfileSettingsBtn()
+        {
+            ProfileSettingsBtn.Click();
+        }
+
         public void ClickOnLoginBtn()
         {
             LoginBtn.Click();
@@ -50,9 +56,9 @@ namespace Onliner.Pages
             LogoutBtn.Click();
         }
         
-        public int GetUserId()
+        public string GetUserId()
         {
-            return int.Parse(UserId.Text);
+            return UserId.Text;
         }
 
         public bool IsLoginBtnDisplayed()
